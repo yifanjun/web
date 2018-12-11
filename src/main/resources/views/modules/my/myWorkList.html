@@ -1,0 +1,122 @@
+<% layout('/layouts/default.html', {title: '工作表管理', libs: ['dataGrid']}){ %>
+<div class="main-content">
+	<div class="box box-main">
+		<div class="box-header">
+			<div class="box-title">
+				<i class="fa fa-list-alt"></i> ${text('工作表管理')}
+			</div>
+			<div class="box-tools pull-right">
+				<a href="#" class="btn btn-default" id="btnSearch" title="${text('查询')}"><i class="fa fa-filter"></i> ${text('查询')}</a>
+				<% if(hasPermi('my:myWork:edit')){ %>
+					<a href="${ctx}/my/myWork/form" class="btn btn-default btnTool" title="${text('新增工作表')}"><i class="fa fa-plus"></i> ${text('新增')}</a>
+				<% } %>
+			</div>
+		</div>
+		<div class="box-body">
+			<#form:form id="searchForm" model="${myWork}" action="${ctx}/my/myWork/listData" method="post" class="form-inline hide"
+					data-page-no="${parameter.pageNo}" data-page-size="${parameter.pageSize}" data-order-by="${parameter.orderBy}">
+				<div class="form-group">
+					<label class="control-label">${text('工作名')}：</label>
+					<div class="control-inline">
+						<#form:input path="wname" maxlength="20" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('工作地点')}：</label>
+					<div class="control-inline">
+						<#form:input path="wplace" maxlength="20" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('工作类型')}：</label>
+					<div class="control-inline">
+						<#form:input path="wtype" maxlength="20" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('电话号码')}：</label>
+					<div class="control-inline">
+						<#form:input path="wphone" maxlength="20" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('人数')}：</label>
+					<div class="control-inline">
+						<#form:input path="wpoeple" maxlength="5" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('是否已经取消')}：</label>
+					<div class="control-inline">
+						<#form:input path="wstatus" maxlength="5" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('备注')}：</label>
+					<div class="control-inline">
+						<#form:input path="wremark" maxlength="255" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('状态')}：</label>
+					<div class="control-inline width-120">
+						<#form:select path="status" dictType="sys_search_status" blankOption="true" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('创建者')}：</label>
+					<div class="control-inline">
+						<#form:input path="createBy" maxlength="64" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">${text('创建时间')}：</label>
+					<div class="control-inline">
+						<#form:input path="createDate" class="form-control width-120"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm">${text('查询')}</button>
+					<button type="reset" class="btn btn-default btn-sm">${text('重置')}</button>
+				</div>
+			</#form:form>
+			<table id="dataGrid"></table>
+			<div id="dataGridPage"></div>
+		</div>
+	</div>
+</div>
+<% } %>
+<script>
+// 初始化DataGrid对象
+$('#dataGrid').dataGrid({
+	searchForm: $("#searchForm"),
+	columnModel: [
+		{header:'${text('工作名')}', name:'wname', index:'a.w_name', width:150, align:"left", frozen:true, formatter: function(val, obj, row, act){
+			return '<a href="${ctx}/my/myWork/form?id='+row.id+'" class="btnList" data-title="${text('编辑工作表')}">'+(val||row.id)+'</a>';
+		}},
+		{header:'${text('工作地点')}', name:'wplace', index:'a.w_place', width:150, align:"left"},
+		{header:'${text('工作类型')}', name:'wtype', index:'a.w_type', width:150, align:"left"},
+		{header:'${text('电话号码')}', name:'wphone', index:'a.w_phone', width:150, align:"left"},
+		{header:'${text('人数')}', name:'wpoeple', index:'a.w_poeple', width:150, align:"left"},
+		{header:'${text('是否已经取消')}', name:'wstatus', index:'a.w_status', width:150, align:"left"},
+		{header:'${text('备注')}', name:'wremark', index:'a.w_remark', width:150, align:"left"},
+		{header:'${text('状态')}', name:'status', index:'a.status', width:150, align:"center", formatter: function(val, obj, row, act){
+			return js.getDictLabel(${@DictUtils.getDictListJson('sys_search_status')}, val, '${text('未知')}', true);
+		}},
+		{header:'${text('创建者')}', name:'createBy', index:'a.create_by', width:150, align:"left"},
+		{header:'${text('创建时间')}', name:'createDate', index:'a.create_date', width:150, align:"center"},
+		{header:'${text('操作')}', name:'actions', width:120, sortable:false, title:false, formatter: function(val, obj, row, act){
+			var actions = [];
+			<% if(hasPermi('my:myWork:edit')){ %>
+				actions.push('<a href="${ctx}/my/myWork/form?id='+row.id+'" class="btnList" title="${text('编辑工作表')}"><i class="fa fa-pencil"></i></a>&nbsp;');
+				actions.push('<a href="${ctx}/my/myWork/delete?id='+row.id+'" class="btnList" title="${text('删除工作表')}" data-confirm="${text('确认要删除该工作表吗？')}"><i class="fa fa-trash-o"></i></a>&nbsp;');
+			<% } %>
+			return actions.join('');
+		}}
+	],
+	// 加载成功后执行事件
+	ajaxSuccess: function(data){
+		
+	}
+});
+</script>
