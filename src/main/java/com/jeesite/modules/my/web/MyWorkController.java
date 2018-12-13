@@ -6,7 +6,9 @@ package com.jeesite.modules.my.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,6 +50,12 @@ public class MyWorkController extends BaseController {
 	@RequiresPermissions("my:myWork:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(MyWork myWork, Model model) {
+		Subject subject=UserUtils.getSubject();
+		boolean a=subject.isPermitted("my:myWork:view");
+		System.out.println(a);
+		boolean b=subject.isPermitted("my:myWork:edit");
+		System.out.println(b);
+
 		model.addAttribute("myWork", myWork);
 		return "modules/my/myWorkList";
 	}
