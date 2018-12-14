@@ -3,6 +3,7 @@
  */
 package com.jeesite.modules.my.entity;
 
+import com.jeesite.common.entity.BaseEntity;
 import org.hibernate.validator.constraints.Length;
 
 import com.jeesite.common.entity.DataEntity;

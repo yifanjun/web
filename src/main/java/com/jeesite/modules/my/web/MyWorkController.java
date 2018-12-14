@@ -6,6 +6,10 @@ package com.jeesite.modules.my.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeesite.modules.my.entity.MyApply;
+import com.jeesite.modules.my.service.MyApplyService;
+import com.jeesite.modules.my.service.MyStudentService;
+import com.jeesite.modules.my.service.MyTeacherService;
 import com.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
@@ -35,7 +39,12 @@ public class MyWorkController extends BaseController {
 
 	@Autowired
 	private MyWorkService myWorkService;
-	
+	@Autowired
+	private MyApplyService myApplyService;
+	@Autowired
+	private MyStudentService myStudentService;
+	@Autowired
+	private MyTeacherService myTeacherService;
 	/**
 	 * 获取数据
 	 */
@@ -50,12 +59,6 @@ public class MyWorkController extends BaseController {
 	@RequiresPermissions("my:myWork:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(MyWork myWork, Model model) {
-		Subject subject=UserUtils.getSubject();
-		boolean a=subject.isPermitted("my:myWork:view");
-		System.out.println(a);
-		boolean b=subject.isPermitted("my:myWork:edit");
-		System.out.println(b);
-
 		model.addAttribute("myWork", myWork);
 		return "modules/my/myWorkList";
 	}
@@ -102,6 +105,26 @@ public class MyWorkController extends BaseController {
 	public String delete(MyWork myWork) {
 		myWorkService.delete(myWork);
 		return renderResult(Global.TRUE, text("删除工作表成功！"));
+	}
+
+	@RequiresPermissions("my:myWork:view")
+	@RequestMapping(value = "getjob")
+	@ResponseBody
+	public void getjob(MyWork myWork, HttpServletRequest request, HttpServletResponse response) {
+		MyApply myApply=new MyApply();
+		//获取学生学号
+		String student_id=UserUtils.getUser().getUserCode();
+		String student_number=myStudentService.get(student_id).getSnumber();
+		//获取教职工号
+		String teacher_id=myWork.getCreateBy();
+		String teacher_number=myTeacherService.get(teacher_id).getTnumber();
+		//工作id为参数
+		String work_id=request.getParameter("id");
+		//插入数据库
+		myApply.setSnumber(student_number);//学生id
+		myApply.setWnumber(work_id);//工作id
+		myApply.setTnumber(teacher_number);//老师id
+		myApplyService.save(myApply);
 	}
 	
 }

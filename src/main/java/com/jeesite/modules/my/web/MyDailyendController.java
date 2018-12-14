@@ -45,7 +45,7 @@ public class MyDailyendController extends BaseController {
 	/**
 	 * 查询列表
 	 */
-	//@RequiresPermissions("my:myDailyend:view")
+	@RequiresPermissions("my:myDailyend:view")
 	@RequestMapping(value = {"list", ""})
 	public String list(MyDailyend myDailyend, Model model) {
 		model.addAttribute("myDailyend", myDailyend);
@@ -55,7 +55,7 @@ public class MyDailyendController extends BaseController {
 	/**
 	 * 查询列表数据
 	 */
-	//@RequiresPermissions("my:myDailyend:view")
+	@RequiresPermissions("my:myDailyend:view")
 	@RequestMapping(value = "listData")
 	@ResponseBody
 	public Page<MyDailyend> listData(MyDailyend myDailyend, HttpServletRequest request, HttpServletResponse response) {
@@ -67,7 +67,7 @@ public class MyDailyendController extends BaseController {
 	/**
 	 * 查看编辑表单
 	 */
-	//@RequiresPermissions("my:myDailyend:view")
+	@RequiresPermissions("my:myDailyend:view")
 	@RequestMapping(value = "form")
 	public String form(MyDailyend myDailyend, Model model) {
 		model.addAttribute("myDailyend", myDailyend);
@@ -77,7 +77,7 @@ public class MyDailyendController extends BaseController {
 	/**
 	 * 保存打卡表
 	 */
-	//@RequiresPermissions("my:myDailyend:edit")
+	@RequiresPermissions("my:myDailyend:edit")
 	@PostMapping(value = "save")
 	@ResponseBody
 	public String save(@Validated MyDailyend myDailyend) {
@@ -88,7 +88,7 @@ public class MyDailyendController extends BaseController {
 	/**
 	 * 删除打卡表
 	 */
-	//@RequiresPermissions("my:myDailyend:edit")
+	@RequiresPermissions("my:myDailyend:edit")
 	@RequestMapping(value = "delete")
 	@ResponseBody
 	public String delete(MyDailyend myDailyend) {

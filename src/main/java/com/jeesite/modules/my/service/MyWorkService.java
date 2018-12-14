@@ -21,7 +21,8 @@ import com.jeesite.modules.my.dao.MyWorkDao;
 @Service
 @Transactional(readOnly=true)
 public class MyWorkService extends CrudService<MyWorkDao, MyWork> {
-	
+
+
 	/**
 	 * 获取单条数据
 	 * @param myWork
@@ -72,5 +73,6 @@ public class MyWorkService extends CrudService<MyWorkDao, MyWork> {
 	public void delete(MyWork myWork) {
 		super.delete(myWork);
 	}
-	
+
+
 }
