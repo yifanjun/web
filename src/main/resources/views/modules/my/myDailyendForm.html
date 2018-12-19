@@ -19,7 +19,7 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('工作号')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="aid" maxlength="20" class="form-control"/>
+								<#form:input path="aid" maxlength="20" class="form-control" value="${myDailyend.aid}"/>
 							</div>
 						</div>
 					</div>
@@ -39,7 +39,7 @@
 							<label class="control-label col-sm-4" title="">
 								<span class="required hide">*</span> ${text('日期')}：<i class="fa icon-question hide"></i></label>
 							<div class="col-sm-8">
-								<#form:input path="ddate" class="form-control"/>
+								<#form:input path="ddate" class="form-control" value="${myDailyend.ddate}"/>
 							</div>
 						</div>
 					</div>

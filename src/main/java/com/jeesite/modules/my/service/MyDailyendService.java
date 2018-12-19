@@ -50,7 +50,7 @@ public class MyDailyendService extends CrudService<MyDailyendDao, MyDailyend> {
 	@Override
 	@Transactional(readOnly=false)
 	public void save(MyDailyend myDailyend) {
-		super.save(myDailyend);
+		super.insert(myDailyend);
 	}
 	
 	/**
