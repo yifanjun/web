@@ -28,6 +28,8 @@ import com.jeesite.common.web.BaseController;
 import com.jeesite.modules.my.entity.MyWork;
 import com.jeesite.modules.my.service.MyWorkService;
 
+import java.util.List;
+
 /**
  * 工作表Controller
  * @author zyf
@@ -110,7 +112,7 @@ public class MyWorkController extends BaseController {
 	@RequiresPermissions("my:myWork:view")
 	@RequestMapping(value = "getjob")
 	@ResponseBody
-	public void getjob(MyWork myWork, HttpServletRequest request, HttpServletResponse response) {
+	public String getjob(MyWork myWork, HttpServletRequest request, HttpServletResponse response) {
 		MyApply myApply=new MyApply();
 		//获取学生学号
 		String student_id=UserUtils.getUser().getUserCode();
@@ -120,11 +122,24 @@ public class MyWorkController extends BaseController {
 		String teacher_number=myTeacherService.get(teacher_id).getTnumber();
 		//工作id为参数
 		String work_id=request.getParameter("id");
-		//插入数据库
+
+		//根据学生id进行将其所有报名工作列出来，如果没有报名则报名，已经报名则无法再次报名
 		myApply.setSnumber(student_number);//学生id
+		List<MyApply> list=myApplyService.findList(myApply);
+		for(int i=0;i<list.size();i++){
+			System.out.println(list.get(i).getTnumber());
+			System.out.println(list.get(i).getWnumber());
+			if(list.get(i).getTnumber().equals(teacher_number) && list.get(i).getWnumber().equals(work_id) && list.get(i).getStatus().equals("0")){
+				//如果查询到有数据的status=0，且教职工号和工作号和要报名的一样，则不允许报名
+				System.out.println("已经有了数据");
+				return renderResult(Global.FALSE, text("您已经报过名！"));
+			}
+		}
+		//插入数据
 		myApply.setWnumber(work_id);//工作id
 		myApply.setTnumber(teacher_number);//老师id
 		myApplyService.save(myApply);
+		return renderResult(Global.TRUE, text("报名成功！"));
 	}
 	
 }
